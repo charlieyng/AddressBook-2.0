@@ -1,0 +1,44 @@
+from flask import Flask, request, render_template, flash
+from elasticsearch_dsl import Index, connections, DocType, Date, Nested, Boolean, analyzer, InnerDoc, Completion, Keyword, Text, Integer
+import math
+
+@addressbook
+class Contact(DocType):
+	FirstName = Text()
+	LastName = Text()
+	PhoneNumber = Integer()
+
+	class Meta:
+		index = 'addressbook'
+
+	#in this implementation valid phone numbers must have exactly 10 digits
+	def validNumber(self):
+		digits = int(math.log10(self.PhoneNumber))+1
+		return (digits == 10)
+
+connections.create_connection(hosts=['localhost'], port = 9200, timeout=20)
+addressbook = Index('addressbook')
+addressbook.doc_type(Contact)
+addressbook.delete(ignore=404)
+addressbook.create()
+
+
+Contact.init()
+contact = Contact(meta = {'id':6})
+contact.FirstName = 'John'
+
+contact.save()
+
+
+app = Flask(__name__)
+app.config.from_object(__name__)
+
+# @app.route('/contact/<name>', methods = ['POST'])
+# def getContact(name):
+# 	return "hi" + name
+
+@app.route('/contact/<name>', methods = ['GET'])
+def getContact(name):
+	return json.dumps(Contact.get(id=6))
+# @app.route('/contact', methods = ['POST'])
+# def createContact():

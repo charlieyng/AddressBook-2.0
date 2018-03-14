@@ -1,0 +1,8 @@
+MANIFEST.in
+addbook/__init__.py
+addbook/addbook.py
+addbook.egg-info/PKG-INFO
+addbook.egg-info/SOURCES.txt
+addbook.egg-info/dependency_links.txt
+addbook.egg-info/requires.txt
+addbook.egg-info/top_level.txt

@@ -1,0 +1,2 @@
+graft addbook/templates
+graft addbook/static
